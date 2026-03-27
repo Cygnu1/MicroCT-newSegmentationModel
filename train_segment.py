@@ -21,8 +21,8 @@ from lovasz_losses import lovasz_hinge
 @dataclass
 class CFG:
     data_root: str = r"/home/ari/Alan_araujo/Rochas/data/data_HMP2"  # <- MUDE AQUI
-    train_samples: Tuple[str, str] = ("mc3_2_P4", "mc3_2_P2")
-    test_sample: str = "c2d"
+    train_samples: Tuple[str, str] = ("c2d", "mc3_2_P2")
+    test_sample: str = "mc3_2_P4"
 
     img_size: int = 512
     in_channels: int = 3          # 1 se grayscale; 3 se RGB
