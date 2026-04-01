@@ -6,21 +6,26 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # Caminho da pasta das máscaras
-pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\tversky_c2d\\resnext101_32x8d_512_tversky_beta3_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
+pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\cbam_c2d\\resnext101_32x8d_CBAM_512_tversky_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
+pastaIsmael = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\data_HMP2\\mc3_2_P2\\Segmented_512"
 
 # Lista ordenada de imagens (para manter consistência)
-imagens = sorted(glob(os.path.join(pasta, "*.tiff")))  # ou .jpg, .tif, etc.
+imagens = sorted(glob(os.path.join(pastaIsmael, "*.tiff")))  # ou .jpg, .tif, etc.
 n = len(imagens)
 
 # Porcentagem da altura
 altura = 0.8
-espessura = 0.8
+raio_analise = 0.38
 
 # Seleciona apenas 80% intermediárias
 inicio = int(0.1 * n)
 fim = int(0.9 * n)
-# imagens_selecionadas = imagens[inicio:fim]
-imagens_selecionadas = imagens[:2369]
+print(f"Começa na fatia {inicio} e vai até a fatia {fim}")
+
+
+imagens_selecionadas = imagens[inicio:fim]
+print(f"Estão sendo usadas {len(imagens_selecionadas)} fatias ")
+# imagens_selecionadas = imagens[:n]
 
 porosidades = []
 indices = []
@@ -37,7 +42,7 @@ for i, caminho in tqdm(enumerate(imagens_selecionadas, start=inicio)):
 
     h, w = img.shape
     centro = (w // 2, h // 2)
-    raio = int(espessura/2 * min(w, h))  # diâmetro de 80% → raio de 40%
+    raio = int(raio_analise * min(w, h))  # diâmetro de 80% → raio de 40%
 
     # Máscara circular
     mascara_circular = np.zeros_like(img, dtype=np.uint8)
