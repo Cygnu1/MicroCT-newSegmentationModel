@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # Caminho da pasta das máscaras
-pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\tversky_c2d\\resnext101_32x8d_512_tversky_beta3_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
+pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\cbam_c2d\\resnext101_32x8d_CBAM_512_tversky_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
 
 # Lista ordenada de imagens (para manter consistência)
 imagens = sorted(glob(os.path.join(pasta, "*.tiff")))  # ou .jpg, .tif, etc.
