@@ -18,10 +18,10 @@ import segmentation_models_pytorch as smp
 # -----------------------------
 @dataclass
 class CFG:
-    data_root: str = r"/home/ari/Alan_araujo/Rochas/data/data_HM"     # <- MUDE AQUI
-    test_sample: str = "mc3_2_P4"            # <- MUDE AQUI
+    data_root: str = r"/home/ari/Alan_araujo/Rochas/data/data_HMP2"     # <- MUDE AQUI
+    test_sample: str = "c2d"            # <- MUDE AQUI
 
-    ckpt_path: str = r"./files/resnext101_32x8d_512_dice_HMP4_P4.pt"  # <- MUDE AQUI (checkpoint do treino)
+    ckpt_path: str = r"./files/resnext101_32x8d_CBAM_512_tversky_HMP2_c2d.pt"  # <- MUDE AQUI (checkpoint do treino)
 
     img_size: int = 512
     in_channels: int = 3          # 1 grayscale; 3 RGB
@@ -37,7 +37,7 @@ class CFG:
 
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
 
-    out_dir: str = "results/resnext101_32x8d_512_dice_HMP4_P4"
+    out_dir: str = "results/resnext101_32x8d_CBAM_512_tversky_HMP2_c2d"
 
 
 # -----------------------------
@@ -110,6 +110,91 @@ def to_uint8_img(img01: np.ndarray) -> np.ndarray:
     # img01 esperado em [0,1]
     x = np.clip(img01 * 255.0, 0, 255).astype(np.uint8)
     return x
+
+# -----------------------------
+# Attention
+# -----------------------------
+class ChannelAttention(nn.Module):
+    def __init__(self, channels: int, reduction: int = 16):
+        super().__init__()
+        hidden = max(channels // reduction, 1)
+
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.max_pool = nn.AdaptiveMaxPool2d(1)
+
+        self.mlp = nn.Sequential(
+            nn.Conv2d(channels, hidden, kernel_size=1, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(hidden, channels, kernel_size=1, bias=False)
+        )
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        avg_out = self.mlp(self.avg_pool(x))
+        max_out = self.mlp(self.max_pool(x))
+        attn = self.sigmoid(avg_out + max_out)
+        return x * attn
+
+
+class SpatialAttention(nn.Module):
+    def __init__(self, kernel_size: int = 7):
+        super().__init__()
+        padding = kernel_size // 2
+        self.conv = nn.Conv2d(2, 1, kernel_size=kernel_size, padding=padding, bias=False)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        avg_out = torch.mean(x, dim=1, keepdim=True)
+        max_out, _ = torch.max(x, dim=1, keepdim=True)
+        attn = self.sigmoid(self.conv(torch.cat([avg_out, max_out], dim=1)))
+        return x * attn
+
+
+class CBAM(nn.Module):
+    def __init__(self, channels: int, reduction: int = 16, spatial_kernel: int = 7):
+        super().__init__()
+        self.channel_att = ChannelAttention(channels, reduction=reduction)
+        self.spatial_att = SpatialAttention(kernel_size=spatial_kernel)
+
+    def forward(self, x):
+        x = self.channel_att(x)
+        x = self.spatial_att(x)
+        return x
+
+class DecoderBlockWithCBAM(nn.Module):
+    def __init__(self, block: nn.Module, out_channels: int):
+        super().__init__()
+        self.block = block
+        self.cbam = CBAM(out_channels)
+
+    def forward(self, *args, **kwargs):
+        x = self.block(*args, **kwargs)
+        x = self.cbam(x)
+        return x
+
+def build_unet_with_cbam(
+    encoder_name: str,
+    encoder_weights,
+    in_channels: int,
+    classes: int,
+    activation=None,
+    decoder_channels=(256, 128, 64, 32, 16),
+):
+    model = smp.Unet(
+        encoder_name=encoder_name,
+        encoder_weights=encoder_weights,
+        in_channels=in_channels,
+        classes=classes,
+        activation=activation,
+        decoder_channels=decoder_channels,
+    )
+
+    wrapped_blocks = []
+    for block, out_ch in zip(model.decoder.blocks, decoder_channels):
+        wrapped_blocks.append(DecoderBlockWithCBAM(block, out_ch))
+
+    model.decoder.blocks = nn.ModuleList(wrapped_blocks)
+    return model
 
 
 # -----------------------------
@@ -250,11 +335,10 @@ def main():
     ds = RockPoreSegTestDataset(pairs, cfg.img_size, cfg.in_channels)
     loader = DataLoader(ds, batch_size=cfg.batch_size, shuffle=False, num_workers=cfg.num_workers, pin_memory=True)
 
-    # model (mesma arquitetura do treino)
-    model = smp.Unet(
+
+    model = build_unet_with_cbam(
         encoder_name=cfg.encoder_name,
-        encoder_weights=cfg.encoder_weights,  # normalmente None
-        decoder_attention_type=cfg.attention,
+        encoder_weights=cfg.encoder_weights,
         in_channels=cfg.in_channels,
         classes=cfg.num_classes,
         activation=None,
