@@ -7,7 +7,10 @@ from tqdm import tqdm
 
 # Caminho da pasta das máscaras
 pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\cbam_c2d\\resnext101_32x8d_CBAM_512_tversky_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
+<<<<<<< HEAD
 pastaIsmael = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\data_HMP2\\mc3_2_P2\\Segmented_512"
+=======
+>>>>>>> cabd01bece374904ef95779dac749de4f4578aff
 
 # Lista ordenada de imagens (para manter consistência)
 imagens = sorted(glob(os.path.join(pastaIsmael, "*.tiff")))  # ou .jpg, .tif, etc.
