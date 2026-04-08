@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # Caminho da pasta das máscaras
-pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\cbam_c2d\\resnext101_32x8d_CBAM_512_tversky_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
+pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\roi_p2\\resnext101_32x8d_CBAM_512_tversky_HMP2_roi_P2\\pred_bin"  # substitua pelo seu caminho real
 pastaIsmael = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\data_HMP2\\mc3_2_P2\\Segmented_512"
 
 # Lista ordenada de imagens (para manter consistência)
-imagens = sorted(glob(os.path.join(pastaIsmael, "*.tiff")))  # ou .jpg, .tif, etc.
+imagens = sorted(glob(os.path.join(pasta, "*.tiff")))  # ou .jpg, .tif, etc.
 n = len(imagens)
 
 # Porcentagem da altura
@@ -75,8 +75,10 @@ print(f"Porosidade total (global): {porosidade_total:.4f}")
 # --- Gráfico ---
 plt.figure(figsize=(6, 10))
 plt.scatter(porosidades, range(len(porosidades)), color='blue', s=20)
-plt.axvline(media_porosidade, color='red', linestyle='--', label=f'Média = {media_porosidade:.4f}')
-plt.axvline(porosidade_total, color='green', linestyle='-.', label=f'Total = {porosidade_total:.4f}')
+# plt.axvline(media_porosidade, color='red', linestyle='--', label=f'Média = {media_porosidade:.4f}')
+# plt.axvline(porosidade_total, color='green', linestyle='-.', label=f'Total = {porosidade_total:.4f}')
+plt.axvline(media_porosidade, color='red', linestyle='--')
+plt.axvline(porosidade_total, color='green', linestyle='-.')
 plt.gca().invert_yaxis()
 plt.title('Porosidade por Imagem (80% centrais)')
 plt.xlabel('Porosidade (fração de pixels 0)')
