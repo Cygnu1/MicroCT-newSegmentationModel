@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # Caminhos das pastas
-pasta = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\roi_p2\resnext101_32x8d_CBAM_512_tversky_HMP2_roi_P2\pred_bin"
-pastaIsmael = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data_HMP2\mc3_2_P2\Segmented_512"
+pasta = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\aspp6_12_18\Resnext101_ASPP_3_6_9_CBAM_128Filters_tversky_HMP2_c2d\pred_bin"
+pastaIsmael = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data_HMP2_roi\c2d\Segmentation_512"
 
 # Parâmetros
 altura = 0.8
@@ -21,8 +21,8 @@ def calcular_porosidade_da_pasta(caminho_pasta, extensao="*.tiff", raio_analise=
     if n == 0:
         raise ValueError(f"Nenhuma imagem encontrada em: {caminho_pasta}")
 
-    inicio = int(0.1 * n)
-    fim = int(0.9 * n)
+    inicio = int(0.01 * n)
+    fim = int(0.99 * n)
 
     print(f"\nPasta: {caminho_pasta}")
     print(f"Total de imagens: {n}")
@@ -91,8 +91,8 @@ indices2, porosidades2, media2, total2 = calcular_porosidade_da_pasta(
 # --- Gráfico comparando as duas pastas ---
 plt.figure(figsize=(8, 10))
 
-plt.scatter(porosidades1, range(len(porosidades1)), s=20, label='ML')
-plt.scatter(porosidades2, range(len(porosidades2)), s=20, label='Ismael')
+plt.scatter(porosidades1, range(len(porosidades1)), s=5, label='ML')
+plt.scatter(porosidades2, range(len(porosidades2)), s=5, label='Ismael')
 
 # plt.axvline(media1, linestyle='--', label=f'Média pasta = {media1:.4f}')
 # plt.axvline(total1, linestyle='-.', label=f'Total pasta = {total1:.4f}')

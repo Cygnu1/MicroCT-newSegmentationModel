@@ -7,9 +7,9 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 # caminho das imagens
-pasta_entrada = "D:\\Alan\\Doutorado\\Rochas\\data\\C2D\\Slices_segmented\\original_512"
+pasta_entrada = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data\c2d\Original_512"
 imagem_referencia_path = "D:\\Alan\\Doutorado\\Rochas\\data\\MC3_2_P2\\Slices_19um\\Slices_19um\\Original_512\\MC2P2_19um_0155.tiff"
-pasta_saida = "D:\\Alan\\Doutorado\\Rochas\\data\\C2D\\Slices_segmented\\original_512_HMP2"
+pasta_saida = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data\c2d\Original_512_HMP2"
 
 os.makedirs(pasta_saida, exist_ok=True)
 
@@ -46,16 +46,16 @@ for img_path in tqdm(glob(os.path.join(pasta_entrada, "*")), desc="Processando i
         match = match.astype(img.dtype)
 
 
-    plt.imshow(img, cmap='gray')
-    plt.show()
+    # plt.imshow(img, cmap='gray')
+    # plt.show()
 
-    plt.imshow(match, cmap='gray')
-    plt.show()
+    # plt.imshow(match, cmap='gray')
+    # plt.show()
 
     nome = os.path.basename(img_path)
-    # cv2.imwrite(os.path.join(pasta_saida, nome), match)
+    cv2.imwrite(os.path.join(pasta_saida, nome), match)
 
     # Rodar apenas 1x, teste
-    break
+    # break
     
 print("Processo concluído!! Imagens alteradas")
