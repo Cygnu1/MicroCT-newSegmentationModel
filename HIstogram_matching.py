@@ -6,9 +6,9 @@ from skimage.exposure import match_histograms
 from tqdm import tqdm
 
 # caminho das imagens
-pasta_entrada = "D:\\Alan\\Doutorado\\Rochas\\data\\C2D\\Slices_segmented\\original_512"
-imagem_referencia_path = "D:\\Alan\\Doutorado\\Rochas\\data\\MC3_2_P2\\Slices_19um\\Slices_19um\\Original_512\\MC2P2_19um_0155.tiff"
-pasta_saida = "D:\\Alan\\Doutorado\\Rochas\\data\\C2D\\Slices_segmented\\original_512_HMP2"
+pasta_entrada = "D:\\Alan\\Doutorado\\Rochas\\data\\C2D\\Slices_segmented\\original"
+imagem_referencia_path = "D:\\Alan\\Doutorado\\Rochas\\data\\MC3_2_P2\\Slices_19um\\Slices_19um\\Original\\MC3_2_P2_19um_0155.tiff"
+pasta_saida = "D:\\Alan\\Doutorado\\Rochas\\data\\C2D\\Slices_segmented\\Original_HM"
 
 os.makedirs(pasta_saida, exist_ok=True)
 
