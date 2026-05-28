@@ -5,9 +5,9 @@ from glob import glob
 from tqdm import tqdm
 
 # Caminhos
-pasta_gt = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data\c2d\Segmented_512"
-pasta_pred = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\clahe_c2d\resnext101_32x8d_512_dice_clahe_c2d\pred_bin"
-pasta_saida = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\clahe_c2d\resnext101_32x8d_512_dice_clahe_c2d\errorMap"
+pasta_gt = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data_HMP2_roi\c2d\Segmentation_512"
+pasta_pred = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\3samples\Resnext101_128Filters_True_3samples_tversky_HMP2_c2d\pred_bin"
+pasta_saida = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\3samples\Resnext101_128Filters_True_3samples_tversky_HMP2_c2d\errorMap"
 
 os.makedirs(pasta_saida, exist_ok=True)
 
