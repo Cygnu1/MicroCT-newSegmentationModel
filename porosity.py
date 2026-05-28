@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # Caminho da pasta das máscaras
-pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\roi_p2\\resnext101_32x8d_CBAM_512_tversky_HMP2_roi_P2\\pred_bin"  # substitua pelo seu caminho real
+pasta = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\results\\3samples\\Resnext101_128Filters_True_3samples_tversky_HMP2_c2d\\pred_bin"  # substitua pelo seu caminho real
 pastaIsmael = "C:\\Users\\alanaraujo\\Documents\\tecgraf\\Doutorado\\Rocha\\Segmentation\\data_HMP2\\mc3_2_P2\\Segmented_512"
 
 # Lista ordenada de imagens (para manter consistência)
@@ -18,8 +18,8 @@ altura = 0.8
 raio_analise = 0.38
 
 # Seleciona apenas 80% intermediárias
-inicio = int(0.1 * n)
-fim = int(0.9 * n)
+inicio = int(0.01 * n)
+fim = int(0.99 * n)
 print(f"Começa na fatia {inicio} e vai até a fatia {fim}")
 
 
@@ -42,7 +42,7 @@ for i, caminho in tqdm(enumerate(imagens_selecionadas, start=inicio)):
 
     h, w = img.shape
     centro = (w // 2, h // 2)
-    raio = int(raio_analise * min(w, h))  # diâmetro de 80% → raio de 40%
+    raio = int(raio_analise * min(w, h)) 
 
     # Máscara circular
     mascara_circular = np.zeros_like(img, dtype=np.uint8)
