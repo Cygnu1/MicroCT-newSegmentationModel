@@ -26,12 +26,12 @@ import segmentation_models_pytorch as smp
 @dataclass
 class CFG:
     data_root: str = r"/home/ari/Alan_araujo/Rochas/data/data_HMP2_roi"     # <- MUDE AQUI
-    test_sample: str = "c2d"            # <- MUDE AQUI
+    test_sample: str = "5173_HM"            # <- MUDE AQUI
 
-    ckpt_path: str = r"./files/Resnext101_ASPP_3_6_9_CBAM_64Filters_tversky_HMP2_c2d.pt"  # <- MUDE AQUI (checkpoint do treino)
+    ckpt_path: str = r"./files/Resnext101_ASPP_3_6_9_CBAM_128Filters_tversky_HMP2_c2d.pt"  # <- MUDE AQUI (checkpoint do treino)
     name_folder = ckpt_path.split("/")[-1].split(".")[0]
 
-    img_size: int = 512
+    img_size: int = 256
     in_channels: int = 3          # 1 grayscale; 3 RGB
     num_classes: int = 1
 
@@ -42,7 +42,7 @@ class CFG:
     use_cbam: bool = True
     cbam_reduction: int = 16
     cbam_spatial_kernel: int = 7
-    base_decoder_channels: int = 64
+    base_decoder_channels: int = 128
     use_aspp: bool = True
     aspp_out_channels: int = 512
     aspp_rates: Tuple[int, int, int] = (3, 6, 9)
@@ -69,8 +69,12 @@ class RockPoreSegTestDataset(Dataset):
 
     def __getitem__(self, idx: int) -> Dict[str, torch.Tensor]:
         ip, mp = self.pairs[idx]
-        img = read_image(ip, self.in_channels)
-        msk = read_mask(mp)
+        img = cv2.imread(ip, cv2.IMREAD_UNCHANGED)
+        img = np.stack([img, img, img], axis=-1)
+        msk = cv2.imread(mp, cv2.IMREAD_UNCHANGED)
+        msk = (msk > 127).astype(np.float32)  # robusto p/ 0/255
+        msk = msk[..., None]  # (H,W,1)
+
 
         # guarda também a imagem original (para overlay)
         img_orig = img.copy()

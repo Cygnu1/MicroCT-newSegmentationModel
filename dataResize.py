@@ -3,6 +3,8 @@ import numpy as np
 import os
 from glob import glob
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+
 
 if "__main__" == __name__:
 
@@ -10,8 +12,8 @@ if "__main__" == __name__:
     size = 512
 
     # Pasta de entrada e saída
-    pasta_entrada = r"D:\Alan\Doutorado\Rochas\data\C2D\Slices_segmented\segmentation"   # substitua pelo seu caminho real
-    pasta_saida = r"D:\Alan\Doutorado\Rochas\data\C2D\Slices_segmented\Segmentation_512"
+    pasta_entrada = r"D:\Alan\Doutorado\Rochas\data\MC3_3_P4\Segmented_HM"   # substitua pelo seu caminho real
+    pasta_saida = r"D:\Alan\Doutorado\Rochas\data\MC3_3_P4\Segmented_HM_512" 
 
     # Cria a pasta de saída se não existir
     os.makedirs(pasta_saida, exist_ok=True)
@@ -52,6 +54,9 @@ if "__main__" == __name__:
 
         # Redimensiona para 512x512
         img_redimensionada = cv2.resize(img_quadrada, (size, size), interpolation=cv2.INTER_NEAREST)
+
+        # virar imagem
+        # img_redimensionada = cv2.rotate(img_redimensionada, cv2.ROTATE_90_CLOCKWISE)
 
         # Salva mantendo o nome original
         cv2.imwrite(os.path.join(pasta_saida, nome_arquivo), img_redimensionada)
