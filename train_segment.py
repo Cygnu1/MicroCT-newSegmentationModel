@@ -44,7 +44,7 @@ class CFG:
     cbam_reduction: int = 16
     cbam_spatial_kernel: int = 7
     base_decoder_channels: int = 128
-    use_aspp: bool = True
+    use_aspp: bool = False
     aspp_out_channels: int = 512
     aspp_rates: Tuple[int, int, int] = (6, 12, 18)
 
@@ -54,7 +54,7 @@ class CFG:
     lovasz_weight: float = 0.5
     tversky_alpha: float = 0.3
     tversky_beta: float = 0.7
-    focal_gamma: float = 2.0
+    focal_gamma: float = 1.0
 
 
     """ Training """
@@ -63,15 +63,15 @@ class CFG:
     num_workers: int = 2
     max_epochs: int = 200
     augment_train: bool = False
-    early_patience: int = 14
+    early_patience: int = 10
     early_min_delta: float = 1e-4
     threshold: float = 0.5  # threshold para binarizar a saída
 
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda:1" if torch.cuda.is_available() else "cpu"
     seed: int = 42
 
     out_dir: str = "./files"
-    best_ckpt_name: str = f"Resnext_Limiar{threshold}_CBAM_128filters_Tversky7_{test_sample}.pt"
+    best_ckpt_name: str = f"Resnext_CBAM1_tversky3_large_{test_sample}.pt"
 
 
 
@@ -237,9 +237,16 @@ def main():
         encoder_weights = None
 
 
-    if cfg.use_cbam == True:
-        print("[AVISO] Modelo com CBAM")
-        model = ResNeXt101SegmentationModel(
+    # model = smp.Unet(
+    #     encoder_name="resnext101_32x8d",
+    #     encoder_weights="imagenet",
+    #     in_channels=3,
+    #     classes=1,
+    #     activation=None,
+    #     decoder_attention_type="scse"
+    # ).to(cfg.device)
+
+    model = ResNeXt101SegmentationModel(
             n_classes=1,
             pretrained=True,
             in_channels=cfg.in_channels,
@@ -250,15 +257,6 @@ def main():
             use_aspp=cfg.use_aspp,
             aspp_out_channels=cfg.aspp_out_channels,
             aspp_rates=cfg.aspp_rates,
-        ).to(cfg.device)
-    else:
-        print("[AVISO] Modelo sem CBAM")
-        model = ResNeXt101SegmentationModel(
-            n_classes=1,
-            pretrained=True,
-            in_channels=cfg.in_channels,
-            base_decoder_channels=cfg.base_decoder_channels,
-            use_cbam=cfg.use_cbam,
         ).to(cfg.device)
 
     
