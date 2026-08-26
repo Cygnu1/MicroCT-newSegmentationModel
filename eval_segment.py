@@ -25,10 +25,10 @@ import segmentation_models_pytorch as smp
 # -----------------------------
 @dataclass
 class CFG:
-    data_root: str = r"/home/ari/Alan_araujo/Rochas/data/data_HMP2_roi"     # <- MUDE AQUI
+    data_root: str = r"/home/ari/Alan_araujo/Rochas/data/data_HM"     # <- MUDE AQUI
     test_sample: str = "c2d"            # <- MUDE AQUI
 
-    ckpt_path: str = r"./files/Resnext101_ASPP_3_6_9_CBAM_64Filters_tversky_HMP2_c2d.pt"  # <- MUDE AQUI (checkpoint do treino)
+    ckpt_path: str = r"./files/Resnext_SCSE_tversky9_small_c2d.pt"  # <- MUDE AQUI (checkpoint do treino)
     name_folder = ckpt_path.split("/")[-1].split(".")[0]
 
     img_size: int = 512
@@ -50,7 +50,7 @@ class CFG:
     batch_size: int = 4
     num_workers: int = 2
 
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda:0" if torch.cuda.is_available() else "cpu"
 
     out_dir: str = f"results/{name_folder}"
 
@@ -194,27 +194,14 @@ def main():
     loader = DataLoader(ds, batch_size=cfg.batch_size, shuffle=False, num_workers=cfg.num_workers, pin_memory=True)
 
 
-    if cfg.use_cbam == True:
-        model = ResNeXt101SegmentationModel(
-            n_classes=1,
-            pretrained=True,
-            in_channels=cfg.in_channels,
-            base_decoder_channels=cfg.base_decoder_channels,
-            use_cbam=cfg.use_cbam,
-            cbam_reduction=cfg.cbam_reduction,
-            cbam_spatial_kernel=cfg.cbam_spatial_kernel,
-            use_aspp=cfg.use_aspp,
-            aspp_out_channels=cfg.aspp_out_channels,
-            aspp_rates=cfg.aspp_rates,
-        ).to(cfg.device)
-    else:
-        model = ResNeXt101SegmentationModel(
-            n_classes=1,
-            pretrained=True,
-            in_channels=cfg.in_channels,
-            base_decoder_channels=cfg.base_decoder_channels,
-            use_cbam=cfg.use_cbam,
-        ).to(cfg.device)
+    model = smp.Unet(
+        encoder_name="resnext101_32x8d",
+        encoder_weights="imagenet",
+        in_channels=3,
+        classes=1,
+        activation=None,
+        decoder_attention_type="scse"
+    ).to(cfg.device)
 
     # load ckpt
     ckpt = torch.load(cfg.ckpt_path, map_location=cfg.device)
