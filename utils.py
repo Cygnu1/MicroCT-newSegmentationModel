@@ -24,8 +24,8 @@ def ensure_dir(path: str):
 
 
 def list_pairs(sample_dir: str) -> List[Tuple[str, str]]:
-    img_dir = os.path.join(sample_dir, "Original_512")
-    msk_dir = os.path.join(sample_dir, "Segmented_512")
+    img_dir = os.path.join(sample_dir, "Original_HM_512_crop")
+    msk_dir = os.path.join(sample_dir, "Segmented_HM_512_crop_large")
 
     imgs = sorted(glob.glob(os.path.join(img_dir, "*")))
     pairs = []
