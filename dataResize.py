@@ -12,8 +12,8 @@ if "__main__" == __name__:
     size = 512
 
     # Pasta de entrada e saída
-    pasta_entrada = r"D:\Alan\Doutorado\Rochas\data\MC3_3_P4\Segmented_HM"   # substitua pelo seu caminho real
-    pasta_saida = r"D:\Alan\Doutorado\Rochas\data\MC3_3_P4\Segmented_HM_512" 
+    pasta_entrada = r"D:\Alan\Doutorado\Rochas\data\MC3_1_P4\modificada\HM_19um"   # substitua pelo seu caminho real
+    pasta_saida = r"D:\Alan\Doutorado\Rochas\data\MC3_1_P4\modificada\HM_19um_512" 
 
     # Cria a pasta de saída se não existir
     os.makedirs(pasta_saida, exist_ok=True)
@@ -60,6 +60,11 @@ if "__main__" == __name__:
 
         # Salva mantendo o nome original
         cv2.imwrite(os.path.join(pasta_saida, nome_arquivo), img_redimensionada)
+
+        # Salvar como png
+        # nome_arquivo = nome_arquivo.split(".")[0]
+        # nome_arquivo = nome_arquivo + ".png"
+        # cv2.imwrite(os.path.join(pasta_saida, nome_arquivo), img_redimensionada)
 
         # Testar em uma só imagem
         # break
