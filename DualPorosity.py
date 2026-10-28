@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # Caminhos das pastas
-pasta = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\c2d\Resnext_3Samples_CBAM_128filters_Tversky_c2d\pred_bin"
-pastaIsmael = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data_HM\c2d\Segmented_HM_512"
+pasta = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\results\combined_small_large_tversky"
+# pastaIsmael = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data_HM\c2d\Segmented_HM_512"
+pastaIsmael = r"C:\Users\alanaraujo\Documents\tecgraf\Doutorado\Rocha\Segmentation\data_HM\c2d\Segmented_HM_512_crop"
 
 # Parâmetros
 altura = 0.8
@@ -98,7 +99,7 @@ plt.plot(porosidades1, range(len(porosidades1)),
          linewidth=1.5, label='ML')
 
 plt.plot(porosidades2, range(len(porosidades2)),
-         linewidth=1.5, label='Ismael')
+         linewidth=1.5, label='Kaio')
 
 # plt.axvline(media1, linestyle='--', label=f'Média pasta = {media1:.4f}')
 # plt.axvline(total1, linestyle='-.', label=f'Total pasta = {total1:.4f}')
